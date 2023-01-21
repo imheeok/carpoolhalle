@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
-    private final AccountRepository accountRepository;
-    private final ConsoleMailSender consoleMailSender;
+    private final AccountService accountService;
+
 
     // form 객체 이름은 변수명이 아니라 type의 camel case를 따라간다..
     @InitBinder("signUpForm")
@@ -40,27 +40,11 @@ public class AccountController {
         if(errors.hasErrors()){
             return "account/signup";
         }
+        accountService.processNewAccount(signUpForm);
 
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(signUpForm.getPassword()) // TODO encoding
-                .carpoolCreatedByWeb(true)
-                .carpoolEnrollmentResultByWeb(true)
-                .carpoolUpdateByWeb(true)
-                .build();
 
-        Account newAccount = accountRepository.save(account);
-
-        newAccount.generateEmailVerifierToken();
-
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("carpoolhalle, Verify sign-up");
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailVerifierToken() +
-                "&email=" + newAccount.getEmail());
-
-        consoleMailSender.send(mailMessage);
         return "redirect:/";
     }
+
+
 }
