@@ -21,9 +21,8 @@ public class AccountController {
 
     private final SignUpFormValidator signUpFormValidator;
     private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
-
-    // form 객체 이름은 변수명이 아니라 type의 camel case를 따라간다..
     @InitBinder("signUpForm")
     public void initBinder(WebDataBinder webDataBinder){
         webDataBinder.addValidators(signUpFormValidator);
@@ -45,6 +44,5 @@ public class AccountController {
 
         return "redirect:/";
     }
-
 
 }
