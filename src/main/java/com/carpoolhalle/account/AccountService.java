@@ -8,6 +8,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -16,10 +17,10 @@ public class AccountService {
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
 
-
+    @Transactional
     public void processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateEmailVerifierToken();
+        newAccount.generateEmailToken();
         sendSignupConfirmEmail(newAccount);
     }
 
@@ -39,7 +40,7 @@ public class AccountService {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail());
         mailMessage.setSubject("carpoolhalle, Verify sign-up");
-        mailMessage.setText("/check-email-token?token=" + newAccount.getEmailVerifierToken() +
+        mailMessage.setText("/verify/email?token=" + newAccount.getEmailToken() +
                 "&email=" + newAccount.getEmail());
 
         javaMailSender.send(mailMessage);

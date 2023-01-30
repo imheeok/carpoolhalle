@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
+
 
 @Controller
 @RequiredArgsConstructor
@@ -43,6 +45,25 @@ public class AccountController {
 
 
         return "redirect:/";
+    }
+
+    @GetMapping("/verify/email")
+    public String verifyEmail(String token, String email, Model model){
+        Account account = accountRepository.findByEmail(email);
+        String view = "account/checkedEmail";
+        if(account == null){
+            model.addAttribute("error", "wrong.email");
+            return view;
+        }
+
+        if(!account.getEmailToken().equals(token)){
+            model.addAttribute("error", "wrong.token");
+            return view;
+        }
+        account.setEmailVerified(true);
+        account.setJoinedAt(LocalDateTime.now());
+        model.addAttribute("nickname", accountRepository.count());
+        return view;
     }
 
 }

@@ -11,6 +11,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Transactional
 @SpringBootTest
 @AutoConfigureMockMvc
 public class AccountControllerTest {
@@ -32,6 +34,37 @@ public class AccountControllerTest {
 
     @MockBean
     JavaMailSender javaMailSender;
+
+    @DisplayName("Verify Email - input ERROR")
+    @Test
+    void verifyEmailToken_with_wrong_input() throws Exception{
+        mockMvc.perform(get("/verify/email")
+                .param("token","asdfqwer")
+                .param("email","email@gmail.com"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("error"))
+                .andExpect(view().name("account/checkedEmail"));
+    }
+    @DisplayName("Verify Email - input CORRECT")
+    @Test
+    void verifyEmailToken_with_correct_input() throws Exception{
+        Account account = Account.builder()
+                .email("test@gmail.com")
+                .password("12345678")
+                .nickname("heeok")
+                .build();
+
+        Account newAccount = accountRepository.save(account);
+        newAccount.generateEmailToken();
+
+        mockMvc.perform(get("/verify/email")
+                .param("token",newAccount.getEmailToken())
+                .param("email",newAccount.getEmail()))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(model().attributeExists("nickname"))
+                .andExpect(view().name("account/checkedEmail"));
+    }
 
     @DisplayName("Test for signup view")
     @Test
@@ -56,7 +89,7 @@ public class AccountControllerTest {
                 .andExpect(view().name("account/signup"));
 
     }
-    @DisplayName("Signup - input SUCCESS")
+    @DisplayName("Signup - input CORRECT")
     @Test
     void signUpSubmit_with_correct_input() throws Exception{
 
@@ -71,6 +104,7 @@ public class AccountControllerTest {
         Account account = accountRepository.findByEmail("xxheeok@gmail.com");
         assertNotNull(account);
         assertNotEquals(account.getPassword(), "12345678");
+        assertNotNull(account.getEmailToken());
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
     }
 }

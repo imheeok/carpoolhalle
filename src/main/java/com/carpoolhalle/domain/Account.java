@@ -25,7 +25,7 @@ public class Account {
 
     private boolean emailVerified;
 
-    private String emailVerifierToken;
+    private String emailToken;
 
     private LocalDateTime joinedAt;
 
@@ -53,7 +53,7 @@ public class Account {
 
     private boolean carpoolUpdateByWeb;
 
-    public void generateEmailVerifierToken() {
-        this.emailVerifierToken = UUID.randomUUID().toString();
+    public void generateEmailToken() {
+        this.emailToken = UUID.randomUUID().toString();
     }
 }
