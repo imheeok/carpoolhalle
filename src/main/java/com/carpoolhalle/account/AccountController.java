@@ -56,13 +56,11 @@ public class AccountController {
             return view;
         }
 
-        if(!account.getEmailToken().equals(token)){
+        if(!account.isValidToken(token)){
             model.addAttribute("error", "wrong.token");
             return view;
         }
-
         account.completeSignUp();
-
         model.addAttribute("nickname", accountRepository.count());
         return view;
     }
