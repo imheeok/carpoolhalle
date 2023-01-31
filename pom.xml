@@ -88,12 +88,10 @@
 			<version>RELEASE</version>
 			<scope>compile</scope>
 		</dependency>
-		<!--<dependency>
-			<groupId>io.openliberty.features</groupId>
-			<artifactId>beanValidation-1.1</artifactId>
-			<version>22.0.0.7</version>
-			<scope>compile</scope>
-		</dependency>-->
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity6</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
