@@ -30,6 +30,7 @@ public class SecurityConfig {
 
         // static resources는 security 대상에서 제외.
         return web -> web.ignoring()
+                .requestMatchers("/node_modules/**")
                 .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
     }
 
