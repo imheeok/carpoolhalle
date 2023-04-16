@@ -54,7 +54,7 @@ public class AccountService {
     }
 
 
-    public void login(Account account) {
+    public void signin(Account account) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
                 account.getNickname(),
                 account.getPassword(),
