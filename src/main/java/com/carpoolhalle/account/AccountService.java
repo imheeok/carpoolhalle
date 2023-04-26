@@ -2,18 +2,18 @@ package com.carpoolhalle.account;
 
 import com.carpoolhalle.ConsoleMailSender;
 import com.carpoolhalle.domain.Account;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import javax.validation.Valid;
 import java.util.List;
 
 @Service
@@ -56,9 +56,11 @@ public class AccountService {
 
     public void signin(Account account) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                account.getNickname(),
+                new UserAccount(account),
                 account.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))); //get list of authority
+
         SecurityContextHolder.getContext().setAuthentication(token);
+
     }
 }

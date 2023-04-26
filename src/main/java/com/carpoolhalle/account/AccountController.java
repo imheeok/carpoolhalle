@@ -2,7 +2,7 @@ package com.carpoolhalle.account;
 
 import com.carpoolhalle.ConsoleMailSender;
 import com.carpoolhalle.domain.Account;
-import jakarta.validation.Valid;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.ui.Model;
@@ -43,8 +43,6 @@ public class AccountController {
         }
         Account account = accountService.processNewAccount(signUpForm);
         accountService.signin(account);
-
-
         return "redirect:/";
     }
 
@@ -62,7 +60,8 @@ public class AccountController {
             return view;
         }
         account.completeSignUp();
-        model.addAttribute("nickname", accountRepository.count());
+        accountService.signin(account);
+        model.addAttribute("nickname", account.getNickname());
         return view;
     }
 

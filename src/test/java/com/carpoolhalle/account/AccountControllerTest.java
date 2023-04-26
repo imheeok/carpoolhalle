@@ -1,8 +1,10 @@
 package com.carpoolhalle.account;
 
+import com.carpoolhalle.config.SecurityConfig;
 import com.carpoolhalle.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -10,6 +12,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,7 +50,8 @@ public class AccountControllerTest {
                 .param("email","email@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("error"))
-                .andExpect(view().name("account/checkedEmail"));
+                .andExpect(view().name("account/checkedEmail"))
+                .andExpect(unauthenticated());
     }
     @DisplayName("Verify Email - input CORRECT")
     @Test
@@ -65,7 +71,8 @@ public class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("nickname"))
-                .andExpect(view().name("account/checkedEmail"));
+                .andExpect(view().name("account/checkedEmail"))
+                .andExpect(authenticated().withUsername("heeok"));
     }
 
     @DisplayName("Test for signup view")
@@ -101,7 +108,8 @@ public class AccountControllerTest {
                         .param("password","12345678")
                         .with(csrf()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(view().name("redirect:/"));
+                .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated());
 
         Account account = accountRepository.findByEmail("xxheeok@gmail.com");
         assertNotNull(account);
