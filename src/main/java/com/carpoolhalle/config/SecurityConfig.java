@@ -18,11 +18,15 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests()
-                .mvcMatchers("/", "/signin", "/signup", "/verify/email",  "/check-email")
-                //.requestMatchers( "/", "/signin", "/signup", "/verify/email",  "/check-email")
+                .mvcMatchers("/", "/signin", "/signup", "/verifyEmail",  "/checkEmailToken")
                 .permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
                 .anyRequest().authenticated();
+
+        http.formLogin()
+                .loginPage("/signin").permitAll();
+        http.logout()
+                .logoutSuccessUrl("/");
 
         return http.build();
     }

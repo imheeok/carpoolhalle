@@ -12,7 +12,7 @@
     <div class="row justify-content-center">
         <form class="needs-validation col-sm-6" action="#"
               th:action="@{/signup}" th:object="${signUpForm}" method="post" novalidate>
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="nickname">Nickname</label>
                 <input id="nickname" type="text" th:field="*{nickname}" class="form-control"
                        placeholder="imheeok" aria-describedby="nicknameHelp" required minlength="3" maxlength="20">
@@ -24,7 +24,7 @@
                     Error</small>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="email">Email</label>
                 <input id="email" type="email" th:field="*{email}" class="form-control"
                        placeholder="your@email.com" aria-describedby="emailHelp" required>
@@ -33,7 +33,7 @@
                     Error</small>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3">
                 <label for="password">Password</label>
                 <input id="password" type="password" th:field="*{password}" class="form-control"
                        aria-describedby="passwordHelp" required minlength="8" maxlength="50">
@@ -45,13 +45,13 @@
                     Error</small>
             </div>
 
-            <div class="form-group">
+            <div class="mb-3 d-grid">
 
                 <small id="submitHelp" class="form-text text-muted">
                     If you agree to <a href="#">CarpoolHalle's terms and conditions</a>, please click the 'Sign Up' button.
                 </small>
 
-                <button class="btn btn-primary btn-block" type="submit"
+                <button class="btn btn-primary" type="submit"
                         aria-describedby="submitHelp">Sign Up
                 </button>
             </div>
@@ -60,26 +60,6 @@
 
     <div th:replace="~{fragments.html :: footer}"></div>
 </div>
-<script type="application/javascript">
-    (function () {
-        'use strict';
-
-        window.addEventListener('load', function () {
-            // Fetch all the forms we want to apply custom Bootstrap validation styles to
-            var forms = document.getElementsByClassName('needs-validation');
-
-            // Loop over them and prevent submission
-            Array.prototype.filter.call(forms, function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (form.checkValidity() === false) {
-                        event.preventDefault();
-                        event.stopPropagation();
-                    }
-                    form.classList.add('was-validated')
-                }, false)
-            })
-        }, false)
-    }())
-</script>
+<script th:replace="~{fragments.html :: form-validation}"></script>
 </body>
 </html>

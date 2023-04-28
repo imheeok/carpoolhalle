@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}">
+</head>
+<body class="bg-light">
+    <div th:replace="~{fragments.html :: main-nav}"></div>
+    <div class="container">
+        <div class="py-5 text-center">
+            <p class="lead">CarpoolHalle</p>
+            <h2>Sign in</h2>
+        </div>
+        <div class="row justify-content-center">
+            <div th:if="${param.error}" class="alert alert-danger" role="alert">
+                <p>The email (or nickname) and password are not correct.</p>
+                <p>Or you used an unverified email. Please check your email.</p>
+                <p>
+                    Please re-enter after verification or use <a href="#" th:href="@{/find-passsword}">find your password.</a>
+                </p>
+            </div>
+
+            <form class="needs-validation col-sm-6" action="#" th:action="@{/signin}" method="post" novalidate>
+                <div class="mb-3">
+                    <label for="username">Email or Nickname</label>
+                    <input id="username" type="text" name="username" class="form-control"
+                           placeholder="your@email.com" aria-describedby="emailHelp" required>
+                    <small id="emailHelp" class="form-text text-muted">
+                        Please enter the email or nickname that you used when signing up.
+                    </small>
+                    <small class="invalid-feedback">Please enter your email.</small>
+                </div>
+                <div class="mb-3">
+                    <label for="password">Password</label>
+                    <input id="password" type="password" name="password" class="form-control"
+                           aria-describedby="passwordHelp" required>
+                    <small id="passwordHelp" class="form-text text-muted">
+                        If you don't remember your password, you can sign in <a href="#" th:href="@{/emaillogin}">without a password</a>
+                    </small>
+                    <small class="invalid-feedback">Please enter your password.</small>
+                </div>
+
+                <div class="mb-3 d-grid">
+                    <button class="btn btn-primary" type="submit"
+                            aria-describedby="submitHelp">Sign in</button>
+                    <small id="submitHelp" class="form-text text-muted">
+                        If you are new CarpoolHalle, please <a href="#" th:href="@{/signup}">Sign up</a> first.
+                    </small>
+                </div>
+            </form>
+        </div>
+
+        <div th:replace="~{fragments.html :: footer}"></div>
+    </div>
+    <script th:replace="~{fragments.html :: form-validation}"></script>
+</body>
+</html>

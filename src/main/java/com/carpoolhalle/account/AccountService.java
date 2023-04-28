@@ -10,6 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountService {
+public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
@@ -27,7 +30,7 @@ public class AccountService {
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
         newAccount.generateEmailToken();
-        sendSignupConfirmEmail(newAccount);
+        sendSignupVerificationEmail(newAccount);
         return newAccount;
     }
 
@@ -43,11 +46,11 @@ public class AccountService {
         return accountRepository.save(account);
     }
 
-    private void sendSignupConfirmEmail(Account newAccount) {
+    public void sendSignupVerificationEmail(Account newAccount) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("carpoolhalle, Verify sign-up");
-        mailMessage.setText("/verify/email?token=" + newAccount.getEmailToken() +
+        mailMessage.setSubject("carpoolhalle, Verify your email");
+        mailMessage.setText("/checkEmailToken?token=" + newAccount.getEmailToken() +
                 "&email=" + newAccount.getEmail());
 
         javaMailSender.send(mailMessage);
@@ -62,5 +65,17 @@ public class AccountService {
 
         SecurityContextHolder.getContext().setAuthentication(token);
 
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = accountRepository.findByEmail(username);
+        if(account == null){
+            account = accountRepository.findByNickname(username);
+        }
+        if(account == null){
+            throw new UsernameNotFoundException(username);
+        }
+        return new UserAccount(account);
     }
 }

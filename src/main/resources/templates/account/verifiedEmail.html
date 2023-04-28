@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments.html:: main-nav}"></div>
+
+<!-- failed -->
+<div class="py-5 text-center" th:if="${error}">
+    <p class="lead">Email verification</p>
+    <div class="alert alert-danger" role="alert">
+        The email verification link is not correct.
+    </div>
+</div>
+
+<!-- succeeded -->
+<div class="py-5 text-center" th:if="${error==null}">
+    <p class="lead">Email verification</p>
+    <h2>
+        Verified your Email.<br />
+        Welcome to join us, <span th:text="${nickname}" >nickname</span>😃
+    </h2>
+    <small class="text-info">you can sign in with the email or nickname used when signing up.</small>
+</div>
+
+<div th:replace="~{fragments.html :: footer}"></div>
+</body>
+</html>

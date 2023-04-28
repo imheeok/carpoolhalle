@@ -46,10 +46,24 @@ public class AccountController {
         return "redirect:/";
     }
 
-    @GetMapping("/verify/email")
-    public String verifyEmail(String token, String email, Model model){
+    @GetMapping("/verifyEmail")
+    public String verifyEmail(@CurrentUser Account account, Model model){
+        model.addAttribute("email", account.getEmail());
+        model.addAttribute("nickname", account.getNickname());
+        return "account/verifyEmail";
+    }
+
+    @GetMapping("/resendVerificationEmail")
+    public String resendVerificationEmail(@CurrentUser Account account, Model model){
+
+        accountService.sendSignupVerificationEmail(account);
+        return "redirect:/";
+    }
+
+    @GetMapping("/checkEmailToken")
+    public String checkEmailToken(String token, String email, Model model){
         Account account = accountRepository.findByEmail(email);
-        String view = "account/checkedEmail";
+        String view = "account/verifiedEmail";
         if(account == null){
             model.addAttribute("error", "wrong.email");
             return view;

@@ -16,4 +16,6 @@ public class MainController {
         }
         return "index";
     }
+    @GetMapping("/signin")
+    public String signin(){return "signin";}
 }

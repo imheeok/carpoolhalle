@@ -1,20 +1,15 @@
 package com.carpoolhalle.account;
 
-import com.carpoolhalle.config.SecurityConfig;
+
 import com.carpoolhalle.domain.Account;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.core.AutoConfigureCache;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,12 +40,12 @@ public class AccountControllerTest {
     @DisplayName("Verify Email - input ERROR")
     @Test
     void verifyEmailToken_with_wrong_input() throws Exception{
-        mockMvc.perform(get("/verify/email")
+        mockMvc.perform(get("/checkEmailToken")
                 .param("token","asdfqwer")
                 .param("email","email@gmail.com"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("error"))
-                .andExpect(view().name("account/checkedEmail"))
+                .andExpect(view().name("account/verifiedEmail"))
                 .andExpect(unauthenticated());
     }
     @DisplayName("Verify Email - input CORRECT")
@@ -65,13 +60,13 @@ public class AccountControllerTest {
         Account newAccount = accountRepository.save(account);
         newAccount.generateEmailToken();
 
-        mockMvc.perform(get("/verify/email")
+        mockMvc.perform(get("/checkEmailToken")
                 .param("token",newAccount.getEmailToken())
                 .param("email",newAccount.getEmail()))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeDoesNotExist("error"))
                 .andExpect(model().attributeExists("nickname"))
-                .andExpect(view().name("account/checkedEmail"))
+                .andExpect(view().name("account/verifiedEmail"))
                 .andExpect(authenticated().withUsername("heeok"));
     }
 
