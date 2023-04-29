@@ -68,7 +68,7 @@
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li><h6 class="dropdown-header" sec:authentication="name">Username</h6></li>
                     <li><a class="dropdown-item" th:href="@{'/profile/' + ${#authentication.name}}">Profile</a></li>
-                    <li><a class="dropdown-item">carpool</a></li>
+                    <li><a class="dropdown-item">Carpool</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#" th:href="@{'/settings/profile'}">Setting</a></li>
                     <li><form class="form-inline my-2 my-lg-0" action="#" th:action="@{/logout}" method="post">
