@@ -1,4 +1,4 @@
-package com.carpoolhalle;
+package com.carpoolhalle.mail;
 
 
 import lombok.extern.slf4j.Slf4j;
