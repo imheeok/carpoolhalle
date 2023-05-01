@@ -70,8 +70,7 @@ public class AccountController {
             model.addAttribute("error", "wrong.token");
             return view;
         }
-        account.completeSignUp();
-        accountService.signin(account);
+        accountService.completeSignUp(account);
         model.addAttribute("nickname", account.getNickname());
         return view;
     }
