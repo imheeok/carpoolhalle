@@ -84,7 +84,7 @@ public class AccountService implements UserDetailsService {
         signin(account);
     }
 
-    public void upddateProfile(Account account, Profile profile) {
+    public void updateProfile(Account account, Profile profile) {
         account.setUrl(profile.getUrl());
         account.setOccupation(profile.getOccupation());
         account.setLocation(profile.getLocation());
@@ -92,5 +92,10 @@ public class AccountService implements UserDetailsService {
         account.setProfileImage(profile.getProfileImage());
 
         accountRepository.save(account);
+    }
+
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account); //merge
     }
 }
