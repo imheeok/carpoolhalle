@@ -13,7 +13,7 @@ public class PasswordFormValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         PasswordForm passwordForm = (PasswordForm) target;
-        if(passwordForm.getNewPassword().equals(passwordForm.getNewPasswordConfirm())){
+        if(!passwordForm.getNewPassword().equals(passwordForm.getNewPasswordConfirm())){
             errors.rejectValue("newPassword" ,"wrong value","The new password you entered does not match");
         }
     }
