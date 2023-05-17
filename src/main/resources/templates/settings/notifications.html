@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments.html :: main-nav}"></div>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="~{fragments.html :: settings-menu(currentMenu='notifications')}"></div>
+        </div>
+        <div class="col-8">
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <div>
+                    <span th:text="${message}">Message</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+
+            <div class="row">
+                <h2 class="col-sm-12">Change Notifications</h2>
+            </div>
+            <div class="row mt-3">
+                <form class="needs-validation col-12" action="#"
+                      th:action="@{/settings/notifications}" th:object="${notifications}" method="post" novalidate>
+                    <div class="mb-3">
+
+                    </div>
+                    <div class="alert alert-light" role="alert">
+                        Set up a way to receive notifications for <strong>the carpool you are participating in.</strong>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch form-check-inline">
+                            <input class="form-check-input" type="checkbox" th:field="*{carpoolUpdatedByEmail}" role="switch" id="carpoolWatchByEmail">
+                            <label class="form-check-label" for="carpoolWatchByEmail">By Email</label>
+                        </div>
+                        <div class="form-check form-switch form-check-inline">
+                            <input class="form-check-input" type="checkbox" th:field="*{carpoolUpdatedByWeb}" role="switch" id="carpoolUpdatedByWeb">
+                            <label class="form-check-label" for="carpoolUpdatedByWeb">By Web</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">Update Notifications</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script th:replace="~{fragments.html :: form-validation}"></script>
+</div>
+</body>
+</html>

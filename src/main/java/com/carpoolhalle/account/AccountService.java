@@ -1,6 +1,7 @@
 package com.carpoolhalle.account;
 
 import com.carpoolhalle.domain.Account;
+import com.carpoolhalle.settings.Notifications;
 import com.carpoolhalle.settings.Profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -40,7 +41,7 @@ public class AccountService implements UserDetailsService {
                 .password(passwordEncoder.encode(signUpForm.getPassword())) //bcrypt
                 .carpoolCreatedByWeb(true)
                 .carpoolEnrollmentResultByWeb(true)
-                .carpoolUpdateByWeb(true)
+                .carpoolUpdatedByWeb(true)
                 .build();
         return accountRepository.save(account);
     }
@@ -97,5 +98,11 @@ public class AccountService implements UserDetailsService {
     public void updatePassword(Account account, String newPassword) {
         account.setPassword(passwordEncoder.encode(newPassword));
         accountRepository.save(account); //merge
+    }
+
+    public void updateNotifications(Account account, Notifications notifications) {
+        account.setCarpoolUpdatedByEmail(notifications.isCarpoolUpdatedByEmail());
+        account.setCarpoolUpdatedByWeb(notifications.isCarpoolUpdatedByWeb());
+        accountRepository.save(account);
     }
 }

@@ -47,9 +47,9 @@ public class Account {
 
     private boolean carpoolEnrollmentResultByWeb;
 
-    private boolean carpoolUpdateByEmail;
+    private boolean carpoolUpdatedByEmail;
 
-    private boolean carpoolUpdateByWeb;
+    private boolean carpoolUpdatedByWeb;
 
     public void generateEmailToken() {
         this.emailToken = UUID.randomUUID().toString();
@@ -63,4 +63,6 @@ public class Account {
     public boolean isValidToken(String token) {
         return this.emailToken.equals(token);
     }
+
+
 }
