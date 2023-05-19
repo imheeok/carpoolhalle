@@ -1,4 +1,4 @@
-package com.carpoolhalle.settings;
+package com.carpoolhalle.settings.form;
 
 import com.carpoolhalle.domain.Account;
 import lombok.Data;

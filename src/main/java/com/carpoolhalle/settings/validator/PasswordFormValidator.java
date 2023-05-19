@@ -1,5 +1,6 @@
-package com.carpoolhalle.settings;
+package com.carpoolhalle.settings.validator;
 
+import com.carpoolhalle.settings.form.PasswordForm;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 

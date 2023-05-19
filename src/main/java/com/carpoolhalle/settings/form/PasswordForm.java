@@ -1,4 +1,4 @@
-package com.carpoolhalle.settings;
+package com.carpoolhalle.settings.form;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

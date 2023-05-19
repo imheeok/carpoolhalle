@@ -1,8 +1,8 @@
 package com.carpoolhalle.account;
 
 import com.carpoolhalle.domain.Account;
-import com.carpoolhalle.settings.Notifications;
-import com.carpoolhalle.settings.Profile;
+import com.carpoolhalle.settings.form.Notifications;
+import com.carpoolhalle.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
@@ -109,5 +109,11 @@ public class AccountService implements UserDetailsService {
         account.setCarpoolUpdatedByWeb(notifications.isCarpoolUpdatedByWeb());*/
         modelMapper.map(notifications, account);
         accountRepository.save(account);
+    }
+
+    public void updateNickname(Account account, String nickname) {
+        account.setNickname(nickname);
+        accountRepository.save(account);
+        signin(account);
     }
 }

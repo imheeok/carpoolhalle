@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments.html :: main-nav}"></div>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="~{fragments.html :: settings-menu(currentMenu='account')}"></div>
+        </div>
+        <div class="col-8">
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <div>
+                    <span th:text="${message}">Message</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <div class="row">
+                <h2 class="col-sm-12">Change Nickname</h2>
+            </div>
+            <div class="row mb-3">
+                <form class="needs-validation col-12" action="#"
+                      th:action="@{/settings/account}" th:object="${nicknameForm}" method="post" novalidate>
+                    <div class="mb-3">
+                        <input id="nickname" type="text" th:field="*{nickname}" class="form-control" aria-describedby="nicknameHelp" required>
+                        <small id="nicknameHelp" class="form-text text-muted">
+                            Please enter a string of characters and numbers without spaces, between 3 and 20 characters in length.
+                        </small>
+                        <small class="invalid-feedback">Nickname is invalid.</small>
+                        <small class="form-text text-danger" th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">nickname Error</small>
+                    </div>
+                    <div class="mb-3">
+                        <button class="btn btn-outline-primary" type="submit" aria-describedby="submitHelp">Update nickname</button>
+                    </div>
+                </form>
+            </div>
+            <div class="row mb-3">
+                <div class="col-sm-12">
+                    <h2 class="text-danger">DELETE ACCOUNT</h2>
+                    <div class="alert alert-danger" role="alert">
+                        This account cannot be deleted.
+                    </div>
+                    <button class="btn btn-outline-danger disabled">Delete Account</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:replace="~{fragments.html :: form-validation}"></script>
+</div>
+</body>
+</html>
