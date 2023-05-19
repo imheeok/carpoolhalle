@@ -4,6 +4,7 @@ import com.carpoolhalle.domain.Account;
 import com.carpoolhalle.settings.Notifications;
 import com.carpoolhalle.settings.Profile;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,6 +26,7 @@ public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
 
 
     public Account processNewAccount(SignUpForm signUpForm) {
@@ -86,11 +88,13 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateProfile(Account account, Profile profile) {
-        account.setUrl(profile.getUrl());
+
+        modelMapper.map(profile, account);
+        /*account.setUrl(profile.getUrl());
         account.setOccupation(profile.getOccupation());
         account.setLocation(profile.getLocation());
         account.setBio(profile.getBio());
-        account.setProfileImage(profile.getProfileImage());
+        account.setProfileImage(profile.getProfileImage());*/
 
         accountRepository.save(account);
     }
@@ -101,8 +105,9 @@ public class AccountService implements UserDetailsService {
     }
 
     public void updateNotifications(Account account, Notifications notifications) {
-        account.setCarpoolUpdatedByEmail(notifications.isCarpoolUpdatedByEmail());
-        account.setCarpoolUpdatedByWeb(notifications.isCarpoolUpdatedByWeb());
+        /*account.setCarpoolUpdatedByEmail(notifications.isCarpoolUpdatedByEmail());
+        account.setCarpoolUpdatedByWeb(notifications.isCarpoolUpdatedByWeb());*/
+        modelMapper.map(notifications, account);
         accountRepository.save(account);
     }
 }

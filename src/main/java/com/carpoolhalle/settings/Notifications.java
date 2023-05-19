@@ -11,9 +11,9 @@ public class Notifications {
     private boolean carpoolUpdatedByEmail;
     private boolean carpoolUpdatedByWeb;
 
-    public Notifications(Account account){
+    /*public Notifications(Account account){
         this.carpoolUpdatedByEmail    = account.isCarpoolUpdatedByEmail();
         this.carpoolUpdatedByWeb      = account.isCarpoolUpdatedByWeb();
-    }
+    }*/
 
 }
