@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -83,4 +84,33 @@ public class AccountController {
         return "account/profile";
     }
 
+    @GetMapping("/signinByEmail")
+    public String signinByEmailForm(){
+        return "account/signinByEmail";
+    }
+
+    @PostMapping("/signinByEmail")
+    public String sendEmailSigninLink(String email, Model model, RedirectAttributes attributes){
+        Account account = accountRepository.findByEmail(email);
+        if(account == null){
+            model.addAttribute("error", "Email address is not valid");
+            return "account/signinByEmail";
+        }
+        accountService.sendSigninLink(account);
+        attributes.addFlashAttribute("message","Check your email.");
+        return "redirect:/signinByEmail";
+    }
+
+    @GetMapping("/signinByEmailProcess")
+    public String signinByEmailProcess(String token, String email, Model model){
+        Account account = accountRepository.findByEmail(email);
+        String view = "account/signedInByEmail";
+        if(account == null || !account.isValidToken(token)){
+            model.addAttribute("error","You cannot sign in.");
+            return view;
+        }
+
+        accountService.signin(account);
+        return view;
+    }
 }

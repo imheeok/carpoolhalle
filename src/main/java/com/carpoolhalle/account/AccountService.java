@@ -116,4 +116,15 @@ public class AccountService implements UserDetailsService {
         accountRepository.save(account);
         signin(account);
     }
+
+    public void sendSigninLink(Account account) {
+        account.generateEmailToken();
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(account.getEmail());
+        mailMessage.setSubject("CarpoolHalle, Signin by Email");
+        mailMessage.setText("/signinByEmailProcess?token=" + account.getEmailToken() +
+                "&email=" + account.getEmail());
+
+        javaMailSender.send(mailMessage);
+    }
 }

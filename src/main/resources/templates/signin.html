@@ -33,9 +33,9 @@
                     <label for="password">Password</label>
                     <input id="password" type="password" name="password" class="form-control"
                            aria-describedby="passwordHelp" required>
-                    <small id="passwordHelp" class="form-text text-muted">
-                        If you don't remember your password, you can sign in <a href="#" th:href="@{/emaillogin}">without a password</a>
-                    </small>
+                    <p id="passwordHelp" class="form-text text-muted text-end">
+                        <a href="#" th:href="@{/signinByEmail}">Forgot password?</a>
+                    </p>
                     <small class="invalid-feedback">Please enter your password.</small>
                 </div>
 
@@ -48,7 +48,7 @@
                     <button class="btn btn-primary" type="submit"
                             aria-describedby="submitHelp">Sign in</button>
                     <small id="submitHelp" class="form-text text-muted">
-                        If you are new CarpoolHalle, please <a href="#" th:href="@{/signup}">Sign up</a> first.
+                        New to CarpoolHalle? <a href="#" th:href="@{/signup}">Create an account</a>.
                     </small>
                 </div>
             </form>

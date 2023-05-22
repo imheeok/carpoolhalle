@@ -28,7 +28,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests()
-                .mvcMatchers("/", "/signin", "/signup", "/verifyEmail",  "/checkEmailToken")
+                .mvcMatchers("/", "/signin", "/signup", "/verifyEmail",  "/checkEmailToken",
+                        "/signinByEmail","signinByEmailProcess", "signedInByEmail")
                 .permitAll()
                 .mvcMatchers(HttpMethod.GET, "/profile/*").permitAll()
                 .anyRequest().authenticated();

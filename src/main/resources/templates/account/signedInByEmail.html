@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}"></head>
+
+<body class="bg-light">
+<nav th:replace="~{fragments.html :: main-nav}"></nav>
+
+<div class="container">
+    <div class="py-5 text-center" th:if="${error}">
+        <p class="lead">CarpoolHalle</p>
+        <div  class="alert alert-danger" role="alert" th:text="${error}">
+            you cannot sign in.
+        </div>
+    </div>
+    <div class="py-5 text-center" th:if="${error == null}">
+        <p class="lead">CarpoolHalle</p>
+        <h2>Signed in by email <a th:href="@{/settings/password}">reset a password</a>.</h2>
+    </div>
+
+    <div th:replace="~{fragments.html :: footer}"></div>
+</div>
+</body>
+</html>
