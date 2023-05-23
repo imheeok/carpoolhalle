@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}"></head>
+<body class="bg-light">
+<div th:replace="~{fragments.html :: main-nav}"></div>
+<div class="container">
+    <div class="row mt-5 justify-content-center">
+        <div class="col-2">
+            <div th:replace="~{fragments.html :: settings-menu(currentMenu='tags')}"></div>
+        </div>
+        <div class="col-8">
+            <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <div>
+                    <span th:text="${message}">Message</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+
+            <div class="row">
+                <h2 class="col-12">Update Tags</h2>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12">
+                    <div class="alert alert-info" role="alert">
+                        Add your tag
+                    </div>
+                    <!-- List<String> tags = List.of("tag1", "tag2"....) -> tag1, tag2 -->
+                    <input id="tags" name="tags" class="tagify" th:value="${#strings.listJoin(tags, ',')}">
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
+    <script type="application/javascript" th:inline="javascript"> $(function() {
+        var csrfToken = /*[[${_csrf.token}]]*/ null;
+        var csrfHeader = /*[[${_csrf.headerName}]]*/ null; $(document).ajaxSend(function (e, xhr, options) {
+            xhr.setRequestHeader(csrfHeader, csrfToken); });
+    }); </script>
+    <script type="application/javascript" th:inline="javascript">
+        $(function () {
+            function tagRequest(url, tagTitle) {
+                $.ajax({
+                    dataType: "json",
+                    autocomplete: {
+                        enabled: true,
+                        rightKey: true,
+                    },
+                    contentType: "application/json; charset=utf-8",
+                    method: "POST",
+                    url: "/settings/tags" + url,
+                    data: JSON.stringify({'tagTitle': tagTitle})
+                }).done(function (data, status) {
+                    console.log("${data} and status is ${status}");
+                });
+            }
+
+            function onAdd(e) {
+                tagRequest("/add", e.detail.data.value);
+            }
+
+            function onRemove(e) {
+                tagRequest("/remove", e.detail.data.value);
+            }
+
+            // The DOM element you wish to replace with Tagify
+            var input = document.querySelector('input[name=tags]');
+            // initialize Tagify on the above input node reference
+            var tagify = new Tagify(input);
+
+            tagify.on("add", onAdd);
+            tagify.on("remove", onRemove);
+
+        });
+
+    </script>
+
+</div>
+</body>
+</html>

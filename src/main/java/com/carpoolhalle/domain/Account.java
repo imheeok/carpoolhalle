@@ -2,6 +2,7 @@ package com.carpoolhalle.domain;
 import lombok.*;
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -50,6 +51,9 @@ public class Account {
     private boolean carpoolUpdatedByEmail;
 
     private boolean carpoolUpdatedByWeb;
+
+    @ManyToMany
+    private Set<Tag> tags;
 
     public void generateEmailToken() {
         this.emailToken = UUID.randomUUID().toString();
