@@ -8,6 +8,8 @@ import com.carpoolhalle.settings.form.*;
 import com.carpoolhalle.settings.validator.NicknameValidator;
 import com.carpoolhalle.settings.validator.PasswordFormValidator;
 import com.carpoolhalle.tag.TagRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -45,6 +48,8 @@ public class SettingController {
     private final ModelMapper modelMapper;
     private final NicknameValidator nicknameValidator;
     private final TagRepository tagRepository;
+    private final ObjectMapper objectMapper;
+
 
     @InitBinder("passwordForm")
     public void passwordInitBinder(WebDataBinder webDataBinder) { webDataBinder.addValidators(new PasswordFormValidator());};
@@ -129,16 +134,20 @@ public class SettingController {
     }
 
     @GetMapping(SETTINGS_TAGS_URL)
-    public String updateTags(@CurrentUser Account account, Model model){
+    public String updateTags(@CurrentUser Account account, Model model) throws JsonProcessingException {
         model.addAttribute(account);
         Set<Tag> tags = accountService.getTags(account);
         model.addAttribute("tags", tags.stream().map(Tag::getTitle).collect(Collectors.toList()));
+
+        List<String> allTags = tagRepository.findAll().stream().map(Tag::getTitle).collect(Collectors.toList());
+        model.addAttribute("whitelist",objectMapper.writeValueAsString(allTags));
+
         return SETTINGS_TAGS_VIEW_NAME;
     }
 
     @PostMapping(SETTINGS_TAGS_URL+"/add")
     @ResponseBody
-    public ResponseEntity AddTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
+    public ResponseEntity addTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
         String title = tagForm.getTagTitle();
 
         Tag tag = tagRepository.findByTitle(title);
@@ -146,6 +155,19 @@ public class SettingController {
             tag = tagRepository.save(Tag.builder().title(tagForm.getTagTitle()).build());
         }
         accountService.addTag(account, tag);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(SETTINGS_TAGS_URL+"/remove")
+    @ResponseBody
+    public ResponseEntity removeTag(@CurrentUser Account account, @RequestBody TagForm tagForm){
+        String title = tagForm.getTagTitle();
+
+        Tag tag = tagRepository.findByTitle(title);
+        if(tag == null){
+           return ResponseEntity.badRequest().build();
+        }
+        accountService.removeTag(account, tag);
         return ResponseEntity.ok().build();
     }
 

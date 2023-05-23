@@ -24,6 +24,7 @@
                     <div class="alert alert-info" role="alert">
                         Add your tag
                     </div>
+                    <div id="whitelist" th:text="${whitelist}" hidden></div>
                     <!-- List<String> tags = List.of("tag1", "tag2"....) -> tag1, tag2 -->
                     <input id="tags" name="tags" class="tagify" th:value="${#strings.listJoin(tags, ',')}">
                 </div>
@@ -65,7 +66,10 @@
             // The DOM element you wish to replace with Tagify
             var input = document.querySelector('input[name=tags]');
             // initialize Tagify on the above input node reference
-            var tagify = new Tagify(input);
+            var tagify = new Tagify(input, {
+                pattern     : /^.{0,20}$/,
+                whitelist   : JSON.parse(document.querySelector("#whitelist").textContent)
+            });
 
             tagify.on("add", onAdd);
             tagify.on("remove", onRemove);
