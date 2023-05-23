@@ -34,20 +34,14 @@ public class AccountService implements UserDetailsService {
 
     public Account processNewAccount(SignUpForm signUpForm) {
         Account newAccount = saveNewAccount(signUpForm);
-        newAccount.generateEmailToken();
         sendSignupVerificationEmail(newAccount);
         return newAccount;
     }
 
     private Account saveNewAccount(@Valid SignUpForm signUpForm) {
-        Account account = Account.builder()
-                .email(signUpForm.getEmail())
-                .nickname(signUpForm.getNickname())
-                .password(passwordEncoder.encode(signUpForm.getPassword())) //bcrypt
-                .carpoolCreatedByWeb(true)
-                .carpoolEnrollmentResultByWeb(true)
-                .carpoolUpdatedByWeb(true)
-                .build();
+        signUpForm.setPassword(passwordEncoder.encode(signUpForm.getPassword()));
+        Account account = modelMapper.map(signUpForm, Account.class);
+        account.generateEmailToken();
         return accountRepository.save(account);
     }
 
@@ -93,12 +87,6 @@ public class AccountService implements UserDetailsService {
     public void updateProfile(Account account, Profile profile) {
 
         modelMapper.map(profile, account);
-        /*account.setUrl(profile.getUrl());
-        account.setOccupation(profile.getOccupation());
-        account.setLocation(profile.getLocation());
-        account.setBio(profile.getBio());
-        account.setProfileImage(profile.getProfileImage());*/
-
         accountRepository.save(account);
     }
 
