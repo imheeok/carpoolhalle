@@ -55,6 +55,9 @@ public class Account {
 
     @ManyToMany
     private Set<Tag> tags = new HashSet<>();
+    
+    @ManyToMany
+    private Set<Zone> zones = new HashSet<>();
 
     public void generateEmailToken() {
         this.emailToken = UUID.randomUUID().toString();
@@ -68,6 +71,5 @@ public class Account {
     public boolean isValidToken(String token) {
         return this.emailToken.equals(token);
     }
-
 
 }

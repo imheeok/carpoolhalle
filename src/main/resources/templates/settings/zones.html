@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row mt-5 justify-content-center">
         <div class="col-2">
-            <div th:replace="~{fragments.html :: settings-menu(currentMenu='tags')}"></div>
+            <div th:replace="~{fragments.html :: settings-menu(currentMenu='zones')}"></div>
         </div>
         <div class="col-8">
             <div th:if="${message}" class="alert alert-success alert-dismissible fade show" role="alert">
@@ -17,16 +17,16 @@
             </div>
 
             <div class="row">
-                <h2 class="col-12">Update Tags</h2>
+                <h2 class="col-12">Update zones</h2>
             </div>
             <div class="row mt-3">
                 <div class="col-12">
                     <div class="alert alert-info" role="alert">
-                        Add your tag
+                        Add your zone
                     </div>
                     <div id="whitelist" th:text="${whitelist}" hidden></div>
                     <!-- List<String> tags = List.of("tag1", "tag2"....) -> tag1, tag2 -->
-                    <input id="tags" name="tags" class="tagify" th:value="${#strings.listJoin(tags, ',')}">
+                    <input id="zones" name="zones" class="tagify" th:value="${#strings.listJoin(zones, ',')}">
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
     <script src="/node_modules/@yaireo/tagify/dist/tagify.min.js"></script>
     <script type="application/javascript" th:inline="javascript">
         $(function () {
-            function tagRequest(url, tagTitle) {
+            function zoneRequest(url, zoneName) {
                 $.ajax({
                     dataType: "json",
                     autocomplete: {
@@ -43,8 +43,8 @@
                     },
                     contentType: "application/json; charset=utf-8",
                     method: "POST",
-                    url: "/settings/tags" + url,
-                    data: JSON.stringify({'tagTitle': tagTitle})
+                    url: "/settings/zones" + url,
+                    data: JSON.stringify({'zoneName': zoneName})
                 }).done(function (data, status) {
                     console.log("${data} and status is ${status}");
                 });
@@ -59,16 +59,16 @@
             }
 
             // The DOM element you wish to replace with Tagify
-            var input = document.querySelector('input[name=tags]');
+            var input = document.querySelector('input[name=zones]');
             // initialize Tagify on the above input node reference
             var tagify = new Tagify(input, {
-                pattern     : /^.{0,20}$/,
-                whitelist   : JSON.parse(document.querySelector("#whitelist").textContent)
+                pattern     : /^.{0,50}$/,
+                whitelist   : JSON.parse(document.querySelector("#whitelist").textContent),
+                enforceWhitelist: true
             });
 
             tagify.on("add", onAdd);
             tagify.on("remove", onRemove);
-
         });
 
     </script>
