@@ -1,8 +1,11 @@
 package com.carpoolhalle.account;
 
+import com.carpoolhalle.config.AppProperties;
 import com.carpoolhalle.domain.Account;
 import com.carpoolhalle.domain.Tag;
 import com.carpoolhalle.domain.Zone;
+import com.carpoolhalle.mail.EmailMessage;
+import com.carpoolhalle.mail.EmailService;
 import com.carpoolhalle.settings.form.Notifications;
 import com.carpoolhalle.settings.form.Profile;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +21,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
+
+import javax.mail.internet.MimeMessage;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +35,12 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AccountService implements UserDetailsService {
     private final AccountRepository accountRepository;
-    private final JavaMailSender javaMailSender;
+    //private final JavaMailSender javaMailSender;
+    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final ModelMapper modelMapper;
+    private final TemplateEngine templateEngine;
+    private final AppProperties appProperties;
 
 
     public Account processNewAccount(SignUpForm signUpForm) {
@@ -47,13 +57,22 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendSignupVerificationEmail(Account newAccount) {
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(newAccount.getEmail());
-        mailMessage.setSubject("carpoolhalle, Verify your email");
-        mailMessage.setText("/checkEmailToken?token=" + newAccount.getEmailToken() +
-                "&email=" + newAccount.getEmail());
+        Context context = new Context();
+        context.setVariable("link","/checkEmailToken?token="+newAccount.getEmailToken()+
+                            "&email="+newAccount.getEmail());
+        context.setVariable("nickname", newAccount.getNickname());
+        context.setVariable("linkName","Verify your email.");
+        context.setVariable("message","Click the link below.");
+        context.setVariable("host",appProperties.getHost());
 
-        javaMailSender.send(mailMessage);
+        String message = templateEngine.process("mail/simple-link",context);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(newAccount.getEmail())
+                .subject("Carpool Halle, Verify your email")
+                .message(message)
+                .build();
+        emailService.send(emailMessage);
     }
 
 
@@ -110,14 +129,22 @@ public class AccountService implements UserDetailsService {
     }
 
     public void sendSigninLink(Account account) {
-        account.generateEmailToken();
-        SimpleMailMessage mailMessage = new SimpleMailMessage();
-        mailMessage.setTo(account.getEmail());
-        mailMessage.setSubject("CarpoolHalle, Signin by Email");
-        mailMessage.setText("/signinByEmailProcess?token=" + account.getEmailToken() +
-                "&email=" + account.getEmail());
+        Context context = new Context();
+        context.setVariable("link","/checkEmailToken?token="+account.getEmailToken()+
+                "&email="+account.getEmail());
+        context.setVariable("nickname", account.getNickname());
+        context.setVariable("linkName","Verify your email.");
+        context.setVariable("message","Click the link below.");
+        context.setVariable("host",appProperties.getHost());
 
-        javaMailSender.send(mailMessage);
+        String message = templateEngine.process("mail/simple-link",context);
+
+        EmailMessage emailMessage = EmailMessage.builder()
+                .to(account.getEmail())
+                .subject("Carpool Halle, Verify your email")
+                .message(message)
+                .build();
+        emailService.send(emailMessage);
     }
 
     public void addTag(Account account, Tag tag) {

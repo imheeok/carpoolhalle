@@ -12,48 +12,13 @@ import org.springframework.stereotype.Component;
 import javax.mail.internet.MimeMessage;
 import java.io.InputStream;
 
-@Profile({"local"})
+@Profile("local")
 @Component
 @Slf4j
-public class ConsoleMailSender implements JavaMailSender {
+public class ConsoleMailService implements EmailService {
 
     @Override
-    public MimeMessage createMimeMessage() {
-        return null;
-    }
-
-    @Override
-    public MimeMessage createMimeMessage(InputStream contentStream) throws MailException {
-        return null;
-    }
-
-    @Override
-    public void send(MimeMessage mimeMessage) throws MailException {
-
-    }
-
-    @Override
-    public void send(MimeMessage... mimeMessages) throws MailException {
-
-    }
-
-    @Override
-    public void send(MimeMessagePreparator mimeMessagePreparator) throws MailException {
-
-    }
-
-    @Override
-    public void send(MimeMessagePreparator... mimeMessagePreparators) throws MailException {
-
-    }
-
-    @Override
-    public void send(SimpleMailMessage simpleMessage) throws MailException {
-        log.info(simpleMessage.getText());
-    }
-
-    @Override
-    public void send(SimpleMailMessage... simpleMessages) throws MailException {
-
+    public void send(EmailMessage emailMessage) {
+        log.info("sent email:{}", emailMessage.getMessage());
     }
 }
