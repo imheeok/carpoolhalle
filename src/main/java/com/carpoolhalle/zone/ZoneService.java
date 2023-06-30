@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class ZoneService {
+
     private final ZoneRepository zoneRepository;
 
     @PostConstruct
@@ -29,6 +30,7 @@ public class ZoneService {
                         String[] split = line.replace("\"","").split(",");
                         return Zone.builder().county(split[0]).city(split[1]).build();
                     }).collect(Collectors.toList());
+
             zoneRepository.saveAll(zoneList);
         }
     }
