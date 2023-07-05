@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments.html :: head}"></head>
+
+<body class="bg-light">
+<div th:replace="~{fragments.html :: main-nav}"></div>
+
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Create account</h2>
+    </div>
+    <div class="row justify-content-center">
+        <form class="needs-validation col-sm-8" action="#"
+              th:action="@{/newGroupForm}" th:object="${groupForm}" method="post" novalidate>
+            <div class="mb-3">
+                <label for="path">Carpool URL</label>
+                <input id="path" type="text" th:field="*{path}" class="form-control"
+                       placeholder="path" aria-describedby="pathHelp" required minlength="3" maxlength="20">
+                <small id="pathHelp" class="form-text text-muted">
+                    Please enter letters and numbers without spaces, between 3 and 20 characters in length.
+                </small>
+                <small class="invalid-feedback">Please provide a valid path.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('path')}" th:errors="*{path}">Path
+                    Error</small>
+            </div>
+
+            <div class="mb-3">
+                <label for="title">Title</label>
+                <input id="title" type="text" th:field="*{title}" class="form-control"
+                       placeholder="Title" aria-describedby="titleHelp" required>
+                <small class="invalid-feedback">Please provide a title.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title Error</small>
+            </div>
+            <div class="mb-3">
+                <label for="shortDescription">Short Description</label>
+                <textarea id="shortDescription" type="textarea" th:field="*{shortDescription}" class="form-control"
+                          aria-describedby="shortDescriptionHelp" required minlength="8" maxlength="50"></textarea>
+                <small id="shortDescriptionHelp" class="form-text text-muted">
+                    <!-- TODO : detail-->
+                </small>
+                <small class="invalid-feedback">Please provide a short Description.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('shortDescription')}" th:errors="*{shortDescription}">Short Description Error</small>
+            </div>
+            <div class="mb-3">
+                <label for="description">Description</label>
+                <textarea id="description" type="textarea" th:field="*{description}" class="form-control editor"
+                          aria-describedby="descriptionHelp" required minlength="8" maxlength="50"></textarea>
+                <small id="descriptionHelp" class="form-text text-muted">
+                    <!-- TODO : detail-->
+                </small>
+                <small class="invalid-feedback">Please provide a description.</small>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">Description Error</small>
+            </div>
+
+            <div class="mb-3 d-grid">
+                <button class="btn btn-primary" type="submit"
+                        aria-describedby="submitHelp">Create a Carpool Group
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div th:replace="~{fragments.html :: footer}"></div>
+</div>
+<script th:replace="~{fragments.html :: form-validation}"></script>
+</body>
+</html>
